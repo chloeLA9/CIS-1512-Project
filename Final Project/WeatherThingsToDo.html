@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<title>
+	Things To Do in Oakland Co
+	Based on Current Weather
+	</title>
+	
+	<style type="text/css">
+	/*CSS Comments*/
+
+	main
+		{
+		padding-bottom: 60px;
+		}
+	body 
+		{
+		background-color: lightblue;
+		background-size: cover;
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		min-height: 100vh;
+		font-family: Optima, serif;
+		}
+
+	h1 
+		{
+		background-color: rgba(255, 255, 255, 0.8);
+		border-radius: 60px; 
+		width: fit-content; 
+		margin-left: auto; 
+		margin-right: auto; 
+		padding: 1em; 
+		border: 5px solid darkgray; 
+		text-align: center; 
+		font-size: 40px;
+		}
+
+	article 
+		{
+		background-color: rgba(255, 255, 255, 0.9);
+		border-radius: 15px;
+		width: fit-content;
+		max-width: 75%;
+		margin: 2em auto;
+		padding: 1.5em;
+		border: 3px solid white;
+		font-size: 20px;
+		}
+
+	article h2
+		{
+		margin-top: 0;
+		text-align: center;
+		}
+	
+	#weather-temp 
+		{
+		text-align: center;
+		}
+
+	#weather-desc 
+		{
+		text-align: left;
+		}
+
+	.location
+		{
+		font-weight: bold;
+		}
+	article#weatherwidget 
+		{
+		margin: auto;
+		}
+
+	.weatherwidget-io 
+		{
+		margin: auto;
+		width: 100%;
+		}
+	
+	
+/*Marquee In Footer*/
+	footer
+		{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		z-index: 100;
+		}
+	
+	.marquee-container 
+		{
+		overflow: hidden;
+		display: flex;
+		white-space: nowrap;
+		padding: 15px 0;
+		}
+
+	.marquee-content 
+		{
+		display: flex;
+		justify-content: space-around;
+		min-width: 100%;
+		animation: scroll-left 30s linear infinite;
+		}
+
+	.marquee-content span {
+		color: black;
+		font-size: 18px;
+		font-weight: bold;
+		}
+
+/* Animation https://www.w3schools.com/cssref/atrule_keyframes.php - https://www.w3schools.com/cssref/func_translatex.php - */
+	@keyframes scroll-left {
+		0% 
+			{
+			transform: translateX(0%);
+			}
+		100% 
+			{
+			transform: translateX(-100%);
+			}
+	}
+		
+	</style>
+
+</head>
+
+<body>
+	<!--HTML Comments-->
+	<header>
+		<nav>
+		<h1>Things To Do in Oakland Co
+		<br>Based on Current Weather</h1>
+		</nav>
+	</header>
+	<main>
+		<article>
+		<h2 id="weather-title">Loading weather...</h2>
+			<p id="weather-temp"></p>
+			<p id="weather-desc">Please wait while we check the current conditions.</p>
+		</article>
+		
+		<article id="weatherwidget">
+		<h2>Plan ahead!</h2>
+			<p>Check the local forecast below, and check back for more destinations and activities when the weather changes!</p>
+			<a class="weatherwidget-io" href="https://forecast7.com/en/42d59n83d34/oakland-county/?unit=us" data-label_1="OAKLAND COUNTY" data-label_2="7-Day Forecast" data-theme="original" data-width="100%">OAKLAND COUNTY 7-Day Forecast</a>
+<script>
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+</script>
+		</article>
+	</main>
+	<footer>
+		<div class="marquee-container">
+
+			<div class="marquee-content">
+				<span>&#128028; Created By: Lauren Green, Komal Dwasari, Gavin Kiselburgh, Chloe Laskowski, and Fredline Buteau &#128028;</span>
+			</div>
+
+			<div class="marquee-content" aria-hidden="true">
+				<span>&#128028; Created By: Lauren Green, Komal Dwasari, Gavin Kiselburgh, Chloe Laskowski, and Fredline Buteau &#128028;</span>
+			</div>
+		</div>
+	</footer>
+	
+	<script>
+<!--https://open-meteo.com/en/docs-->
+
+    const dropdownHTML = `
+        <select id="weather-select" onchange="applyManualWeather(this.value)">
+            <option value="">-- Choose a condition --</option>
+            <option value="0">Sunny ☀️</option>
+            <option value="2">Cloudy ⛅</option>
+            <option value="51">Rainy 🌧️</option>
+            <option value="71">Snowy ❄️</option>
+            <option value="45">Foggy 🌫️</option>
+            <option value="95">Stormy ⛈️</option>
+        </select>
+    `;
+
+    function showDropdown(message) {
+        document.getElementById("weather-title").textContent = "Select Current Weather:";
+        document.getElementById("weather-desc").textContent = message;
+        document.getElementById("weather-temp").innerHTML = dropdownHTML;
+    }
+
+    function getWeatherInfo(weatherCode) {
+        if (weatherCode === 0 || weatherCode === 1) {
+            return { image: "assets/sunny.jpg", footerColor: "##8bb084", title: "It's a beautiful sunny day!", desc: `TreeRunner Adventure Park?` };
+        } else if (weatherCode === 2 || weatherCode === 3) {
+            return { image: "assets/cloudy.jpg", footerColor: "##89ad81", title: "It's cloudy today.", desc: `Detroit Zoo?` };
+        } else if (weatherCode >= 51 && weatherCode <= 67 || weatherCode >= 80 && weatherCode <= 82) {
+            return {
+                image: "assets/rainy.jpg",
+                footerColor: "#8bad82",
+                title: "It's rainy outside.",
+                desc: `Rainy days in Oakland County do not have to mean staying home. When the weather turns gloomy, there are still plenty of indoor places to explore, whether you want something relaxing, nostalgic, active, or family-friendly.
+                <br><br>Top Rainy Day Ideas in Oakland County:<br>
+                <ul>
+                <li><a href="https://www.puttingedge.com/locations/novi/">Putting Edge in Novi</a></li>
+                <li><a href="https://www.simon.com/mall/great-lakes-crossing-outlets">Great Lakes Crossing</a> in Auburn Hills: <a href="https://www.visitsealife.com/michigan/">SEA LIFE Aquarium</a>, <a href="https://www.legolanddiscoverycenter.com/michigan/">LEGOLAND</a>, <a href="https://www.round1usa.com/">ROUND1 Bowling</a>, <a href="https://www.rainforestcafe.com/location/rainforest-cafe-great-lakes-crossing-mi/">Rainforest Cafe</a> and more</li>
+                <li><a href="http://www.marvin3m.com/">Marvin's Marvelous Mechanical Museum</a></li>
+                <li>Kids Empire in Farmington Hills and Troy</li>
+                </ul>
+                <br><br><span class="location">Putting Edge</span> in Novi is a great rainy-day activity for people looking for something more active and unique. The indoor glow-in-the-dark mini golf course uses black lights, music, and neon themes to create a fun indoor experience that is perfect for gloomy afternoons.
+                <br><br><span class="location">Great Lakes Crossing</span> in Auburn Hills is one of the best rainy-day destinations in the area because several indoor attractions are located in one place. Visitors can explore <span class="location">SEA LIFE Michigan Aquarium</span>, build and play inside <span class="location">LEGOLAND Discovery Center</span>, enjoy bowling and arcade games at <span class="location">Round1 Bowling & Arcade</span>, or stop for a tropical-themed meal at <span class="location">Rainforest Cafe</span>. Since everything is indoors and connected to the mall, it is easy to spend an entire rainy afternoon there.
+                <br><br>Families with younger children may also enjoy <span class="location">Kids Empire Troy or Kids Empire Farmington Hills</span>. These indoor playgrounds give children a place to play and burn energy while parents can relax comfortably indoors during bad weather.
+                <br><br>For people who enjoy nostalgic entertainment, <span class="location">Marvin's Marvelous Mechanical Museum</span> offers vintage arcade games, odd collectibles, and classic machines in a unique old-school atmosphere that feels especially cozy on rainy days.`
+            };
+        } else if (weatherCode >= 71 && weatherCode <= 77 || weatherCode >= 85 && weatherCode <= 86) {
+            return { image: "assets/snowy.jpg", footerColor: "#edf5ff", title: "It's snowing!", desc: `Bundle up! Head to Mt. Holly Ski Resort, go sledding at Bloomer Park, or warm up with cocoa at a local café in Clarkston.` };
+        } else if (weatherCode >= 95) {
+            return { image: "assets/stormy.jpg", footerColor: "#8aad81", title: "There's a thunderstorm.", desc: `Stay safe indoors. A perfect time to visit the Great Lakes Crossing mall, catch a movie, or relax at home with a good book.` };
+        } else if (weatherCode >= 45 && weatherCode <= 48) {
+            return { image: "assets/foggy.jpg", footerColor: "#8aad81", title: "It's foggy out.", desc: `Drive carefully today. Consider indoor activities like the Baldwin Public Library, a local coffee shop, or the Older Persons Commission in Rochester Hills.` };
+        } else {
+            showDropdown("We couldn't determine the current conditions — pick one below to see suggestions.");
+        }
+    }
+
+// Get Weather
+
+    /*If API isn't working, this will allow user to select the current weather*/
+    function applyManualWeather(code) {
+        if (code === "") return;
+        const info = getWeatherInfo(Number(code));
+        if (!info) return;
+        document.body.style.backgroundImage = `url('${info.image}')`;
+        document.querySelector("footer").style.backgroundColor = info.footerColor;
+        document.getElementById("weather-title").textContent = info.title;
+        document.getElementById("weather-temp").innerHTML = dropdownHTML;
+        document.getElementById("weather-desc").innerHTML = info.desc;
+    }
+
+    async function loadWeather() {
+        try {
+            // Oakland County, MI
+            const lat = 42.6584;
+            const lon = -83.3871;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&temperature_unit=fahrenheit&timezone=America%2FDetroit`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            const code = data.current.weather_code;
+            const temp = Math.round(data.current.temperature_2m);
+            const info = getWeatherInfo(code);
+            if (!info) return;
+
+            // Update background image based on current weather
+            document.body.style.backgroundImage = `url('${info.image}')`;
+            document.querySelector("footer").style.backgroundColor = info.footerColor;
+
+            // Update article
+            document.getElementById("weather-title").textContent = info.title;
+            document.getElementById("weather-temp").textContent = `Current temperature: ${temp}°F`;
+            document.getElementById("weather-desc").innerHTML = info.desc;
+
+        } catch (error) {
+            showDropdown("Oops! It looks like the API is currently unavailable — pick a condition below to see suggestions.");
+        }
+    }
+
+    loadWeather();
+	
+	</script>
+	
+</body>
+</html>
